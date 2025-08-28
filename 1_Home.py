@@ -23,7 +23,25 @@ with st.container():
     col1, col2 = st.columns([1, 3])
     with col1:
         st.image("me.jpg", caption="Caio Alexandre", use_container_width=True)
+
     with col2:
         st.markdown('<h2 class="intro-title" style="text-align: left;">Olá, me chamo <span class="highlight">Caio Alexandre dos Santos</span>.</h2>', unsafe_allow_html=True)
         st.markdown(f'<p class="intro-text" style="text-align: left;">Como estudante do 4º semestre de <span class="highlight">Engenharia de Software na FIAP</span>, busco unir a paixão pela tecnologia com a análise de dados para transformar informações complexas em soluções práticas e de impacto. Meu objetivo é atuar em um ambiente que me permita aplicar meus conhecimentos em desenvolvimento e dados para resolver problemas reais e contribuir para o crescimento de projetos inovadores.</p>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    # --- BOTÃO DE DOWNLOAD DO CURRÍCULO ---
+        st.write("") # Adiciona um pequeno espaço
+
+        # Substitua 'curriculo.pdf' pelo nome EXATO do seu arquivo de currículo
+        curriculo_filename = "Curriculo_Caio.pdf"
+
+        try:
+            with open(curriculo_filename, "rb") as file:
+                btn = st.download_button(
+                    label="Baixar Currículo",
+                    data=file,
+                    file_name=f"Curriculo_Caio.pdf", # Nome que o arquivo terá ao ser baixado
+                    mime="application/pdf"
+                )
+        except FileNotFoundError:
+            st.error(f"Erro: Arquivo '{curriculo_filename}' não encontrado. Por favor, verifique se o arquivo está na mesma pasta que o script.")
+
