@@ -195,7 +195,7 @@ if pagina_selecionada == "Conhecendo o Dataset":
         - **`price`**: Preço do produto.
         - **`freight_value`**: Custo do frete.
         - **`product_weight_g`**: Peso do produto em gramas.
-        - **(Datas)** `order_purchase_timestamp`, `order_delivered_customer_date`: Pontos específicos em uma linha do tempo contínua.
+        - `order_purchase_timestamp`, `order_delivered_customer_date`: Pontos específicos em uma linha do tempo contínua.
         """)
     
     with st.expander("Ver amostra dos dados"):
@@ -205,7 +205,7 @@ if pagina_selecionada == "Conhecendo o Dataset":
 # --- Página 1: Análise Descritiva Geral (VERSÃO COM ANÁLISE DETALHADA) ---
 if pagina_selecionada == "Análise Descritiva Geral":
     st.header('Análise Descritiva dos Dados')
-    st.markdown("Esta seção oferece um panorama fundamental sobre os três pilares do marketplace: a satisfação do cliente, a precificação dos produtos e os custos de logística.")
+    st.markdown("Qual é o perfil geral das transações da Olist em termos de preço, frete e satisfação do cliente?")
 
     col1, col2 = st.columns(2)
 
@@ -266,11 +266,11 @@ if pagina_selecionada == "Análise Descritiva Geral":
                          trendline_color_override="red",
                          labels={'price': 'Preço do Produto (R$)', 'freight_value': 'Valor do Frete (R$)'})
         st.plotly_chart(fig, use_container_width=True)
-        st.markdown("O coeficiente de **+0.44** indica uma correlação positiva moderada: produtos mais caros tendem a ter um frete mais caro, como esperado.")
+        st.markdown("O coeficiente de **+0.42** indica uma correlação positiva moderada: produtos mais caros tendem a ter um frete mais caro, como esperado.")
 
 # --- Página 2: Hábitos de Compra por Estado ---
 elif pagina_selecionada == "Hábitos de Compra por Estado":
-    st.header("Análise Geográfica dos Hábitos de Compra")
+    st.markdown("O comportamento de compra e as preferências de produtos variam entre os diferentes estados do Brasil?")
     df_state_value = df_final.groupby('customer_state')['total_order_value'].mean().sort_values(ascending=False).reset_index()
     top_categories_geral = df_final['product_category_name_english'].value_counts().nlargest(15).reset_index()
     top_categories_geral.columns = ['Categoria', 'Número de Pedidos']
@@ -303,7 +303,7 @@ elif pagina_selecionada == "Hábitos de Compra por Estado":
 
 # --- Página 3: Padrões Sazonais de Vendas ---
 elif pagina_selecionada == "Padrões Sazonais de Vendas":
-    st.header("Análise de Sazonalidade das Vendas")
+    st.markdown("Como o volume de vendas se comporta ao longo dos meses do ano e dos dias da semana?")
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Vendas Médias por Mês (Padrão Sazonal)")
@@ -333,9 +333,8 @@ elif pagina_selecionada == "Padrões Sazonais de Vendas":
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("""
-        Os gráficos desta aba mostram que as vendas da Olist são fortemente influenciadas tanto por um macro-ciclo anual, impulsionado por datas comemorativas, quanto por um micro-ciclo semanal, que reflete a rotina do consumidor.
         
-        Embora haja flutuações ao longo do ano, com picos menores em datas como Dia das Mães (Maio), o destaque absoluto é o mês de **Novembro**. Este pico é inequivocamente impulsionado pela Black Friday. Este evento se consolidou como a data mais importante para o varejo online no Brasil, antecipando grande parte das compras de fim de ano.
+        Apesar das flutuações ao longo do ano, com picos menores em datas como Dia das Mães (Maio), o destaque absoluto é o mês de **Novembro**. Este pico é inequivocamente impulsionado pela Black Friday. Este evento se consolidou como a data mais importante para o varejo online no Brasil, antecipando grande parte das compras de fim de ano.
 
         As vendas são consistentemente mais altas durante os dias úteis (Segunda a Sexta-feira), com um pico geralmente na **Terça-feira**. Este padrão sugere que os consumidores podem usar o fim de semana para pesquisar produtos e navegar, mas a decisão e o ato da compra são frequentemente concretizados durante a semana.
     """)
@@ -343,7 +342,7 @@ elif pagina_selecionada == "Padrões Sazonais de Vendas":
 # --- Página 4: Avaliação por Categoria Popular ---
 # --- Página 4: Avaliação por Categoria Popular (COM ANÁLISE DETALHADA) ---
 elif pagina_selecionada == "Avaliação por Categoria Popular":
-    st.header('Distribuição da Nota de Avaliação para as Categorias Mais Populares')
+    st.markdown('Qual é o nível de satisfação dos clientes com as categorias de produtos mais vendidas na plataforma?')
     
     # 1. Preparar os dados
     df_categoria = df_final[['product_category_name_english', 'review_score']].copy().dropna()
@@ -378,13 +377,13 @@ elif pagina_selecionada == "Avaliação por Categoria Popular":
     st.subheader("Análise dos Resultados")
     st.markdown("""
 A análise conjunta do gráfico e da tabela revela que **popularidade não garante uma experiência de cliente consistente**.
-- **Campeões de Consistência:** Categorias como **`beleza_saude`** se destacam com uma média de avaliação alta e baixo desvio padrão. Isso indica que a maioria dos clientes tem uma experiência similarmente excelente.
-- **Gigantes Inconsistentes:** Em contraste, categorias de altíssimo volume como **`cama_mesa_banho`** apresentam um desvio padrão muito maior. O boxplot largo e os outliers com notas baixas confirmam essa inconsistência: a experiência do cliente varia drasticamente de ótima a péssima.
-O maior potencial de melhoria para a Olist está em reduzir a variabilidade nas categorias mais populares, mas que são inconsistentes. Focar em entender e corrigir as causas das avaliações baixas nesses segmentos de alto volume trará o maior impacto para a satisfação geral da plataforma.
+ Categorias como **`beleza_saude`** se destacam com uma média de avaliação alta e baixo desvio padrão. Isso indica que a maioria dos clientes tem uma experiência similarmente excelente.
+ Em contraste, categorias de altíssimo volume como **`cama_mesa_banho`** apresentam um desvio padrão muito maior.
 """)
 # --- Página 5: Satisfação por Tipo de Pagamento (COM TABELA) ---
 elif pagina_selecionada == "Satisfação por Tipo de Pagamento":
     st.header("Análise de Satisfação por Tipo de Pagamento")
+    st.markdown("O método de pagamento escolhido pelo cliente tem alguma relação com a sua avaliação final da compra?")
     st.markdown("Análise da avaliação média e do intervalo de confiança de 95% para os principais métodos de pagamento.")
     
     # 1. Preparação dos dados
@@ -440,18 +439,16 @@ elif pagina_selecionada == "Satisfação por Tipo de Pagamento":
 
     st.dataframe(table_to_show)
     st.write("""
-### Análise e Conclusões da Análise
 
 Esta análise investiga se o método de pagamento escolhido pelo cliente tem um impacto estatisticamente significativo na sua avaliação final. Os resultados, validados pelo teste ANOVA, mostram que **sim, a forma de pagamento influencia a satisfação**.
 
-#### Observações Principais:
 * O **cartão de crédito**, método com a menor fricção e confirmação instantânea, está associado à maior média de satisfação. Isso sugere que uma experiência de checkout rápida e fluida contribui positivamente para a percepção do cliente.
 * Em contraste, o **boleto** e o **voucher** apresentam as médias de avaliação mais baixas. A provável causa para o boleto é a demora na confirmação do pagamento (1 a 3 dias), que atrasa o início do envio e aumenta a ansiedade do cliente. Para o voucher, a menor satisfação pode indicar dificuldades na aplicação do cupom ou que as promoções estão atreladas a produtos/vendedores de menor desempenho.
 
 """)
 # --- Página 6: Análise de Fotos vs. Vendas (NOVA) ---
 elif pagina_selecionada == "Análise de Fotos vs. Vendas":
-    st.header("Análise: Quantidade de Fotos vs. Volume de Vendas")
+    st.markdown("A quantidade de fotos em um anúncio de produto impacta a nas vendas?")
     st.markdown("""
     Esta análise testa se produtos com anúncios mais ricos visualmente (mais fotos) tendem a vender mais vezes.
     - **Hipótese Nula ($H_0$)**: O volume médio de vendas é **igual** para produtos com poucas e muitas fotos.
@@ -520,23 +517,39 @@ Esta análise investiga uma das hipóteses mais importantes para o sucesso em e-
                  )
     fig.update_layout(showlegend=False)
     st.plotly_chart(fig, use_container_width=True)
-
+# --- TABELA DE MEDIDAS ESTATÍSTICAS (ATUALIZADA) ---
+    st.markdown("---")
+    st.subheader("Tabela de Estatísticas Descritivas (Volume de Vendas)")
+    # Função para calcular a moda de forma segura
+    def get_mode(x):
+        return x.mode()[0] if not x.mode().empty else np.nan
+        
+    # Agrupar e calcular as métricas solicitadas
+    summary_stats = df_analysis.groupby('grupo_fotos')['total_vendas'].agg(['mean', 'median', get_mode, 'std', 'var']).reset_index()
+    summary_stats.columns = ['Grupo de Fotos', 'Média', 'Mediana', 'Moda', 'Desvio Padrão', 'Variância']
+    
+    # Reordenar as linhas para corresponder à ordem do gráfico
+    order = ['1 Foto', '2-3 Fotos', '> 3 Fotos']
+    summary_stats['Grupo de Fotos'] = pd.Categorical(summary_stats['Grupo de Fotos'], categories=order, ordered=True)
+    summary_stats = summary_stats.sort_values('Grupo de Fotos')
+    
+    st.dataframe(summary_stats)
     st.write("""
 
 ---
 
-### Conclusão e Resposta da Análise
-
 A análise estatística (Teste T) nos permitiu **rejeitar a hipótese nula** com um **Valor-p de 0.0217**, que é menor que o nosso nível de significância de 0.05.
 
-Os resultados mostram que produtos com **mais de 3 fotos** vendem, em média, **3.38 vezes**, enquanto produtos com **apenas 1 foto** vendem, em média, **3.05 vezes**. Embora a diferença pareça pequena, o teste estatístico confirma que ela é real e consistente em todo o conjunto de dados.
+Os resultados mostram que produtos com **mais de 3 fotos** vendem, em média, **3.38 vezes**, enquanto produtos com **apenas 1 foto** vendem, em média, **3.05 vezes**. O teste confirma que ela é real e consistente em todo o conjunto de dados.
 
-Anúncios mais completos visualmente **vendem mais**.
+Um anúncio com várias fotos, aumenta a credibilidade e a segurança na hora de fechar a compra.
 """)
     
 # --- Página 7: Qui-Quadrado (Categoria vs. Estado) (COM ANÁLISE) ---
 elif pagina_selecionada == "Qui-Quadrado (Categoria vs. Estado)":
     st.header("Teste Qui-Quadrado: Relação entre Categoria do Produto e Estado do Cliente")
+    st.markdown("Existe uma associação estatisticamente significativa entre o estado do cliente e a categoria de produto que ele compra?")
+
     st.markdown("""
     Analisamos se a preferência por uma categoria de produto é influenciada pelo estado do cliente.
     - **Hipótese Nula ($H_0$)**: A escolha da categoria é **independente** do estado do cliente.
